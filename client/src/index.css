@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    font-family: 'poppins', sans-serif;
+  }
+
+.form-inputs{
+    @apply flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50
+  }
+  @layer base {
+
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+}
+.file-inputs{
+  @apply block w-full text-sm text-slate-500
+  file:mr-4 file:py-2 file:px-4
+  file:rounded-full file:border file:border-slate-900
+  file:text-sm file:font-semibold
+file:bg-violet-50 file:text-violet-700
+hover:file:bg-violet-100
+}
+  @keyframes slideIn {
+    0% {
+      transform: translateX(100%);
+   }
+    100% {
+      transform: translateX(0%);
+   }
+  }
+
+  .slide-in {
+   animation: slideIn 0.5s forwards;
+  }
+  @keyframes slideOut {
+    0% {
+      transform: translateX(0%);
+   }
+    100% {
+      transform: translateX(100%);
+   }
+  }
+
+  .slide-out {
+   animation: slideOut 0.5s backwards;
+  }
