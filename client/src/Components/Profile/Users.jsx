@@ -14,28 +14,24 @@ const Users = () => {
     const { userImage, setUser } = useContext(AuthContext);
     const [user, setUserState] = useState(JSON.parse(localStorage.getItem('user')) || {});
     const [selectedFile, setSelectedFile] = useState(null);
+    const [isPhotoUploaded, setIsPhotoUploaded] = useState(false);
     const [photo, setPhoto] = useState(user?.photo || '' || userImage);
     const inputRef = useRef(null);
     const [email, setEmail] = useState(user?.email || '');
     const [fullName, setFullName] = useState(user?.fullName || '');
     const [loading, setLoading] = useState(false);
     const { userId } = useParams();
-    const [isPhotoUploaded, setIsPhotoUploaded] = useState(false);
 
     useEffect(() => {
         // Fetch user data from local storage or wherever it is stored
         const userData = JSON.parse(localStorage.getItem('user')) || {};
         setUserState(userData);
         setUser(userData);
-        // if (selectedFile) {
-        //     URL.revokeObjectURL(URL.createObjectURL(selectedFile));
-        // }
-    }, []); // Empty dependency array to run this effect once on mount
+    }, []);
 
     const handleChange = (e) => {
         if (e.target.files[0]) {
             setSelectedFile(e.target.files[0]);
-            setIsPhotoUploaded(false);
         }
     };
 

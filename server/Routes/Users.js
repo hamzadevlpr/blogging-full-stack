@@ -5,7 +5,7 @@ const User = require('../Models/UserModels');
 const jwt = require('jsonwebtoken');
 
 const createToken = (_id) => {
-    return jwt.sign({ _id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1d' })
+    return jwt.sign({ _id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '3d' })
 }
 
 
@@ -26,16 +26,14 @@ router.post('/signup', async (req, res) => {
         const newUser = new User({ fullName, email, password: hashedPassword });
         await newUser.save();
         // create token
-        const token = createToken(newUser._id);
+        // const token = createToken(newUser._id);
 
-        res.status(201).json({ message: 'User registered successfully', token, email: newUser.email });
+        res.status(201).json({ message: 'User registered successfully', email: newUser.email });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-
-// Other routes for login, JWT generation, and middleware can be defined here
 
 router.post('/login', async (req, res) => {
     try {
@@ -61,7 +59,8 @@ router.post('/login', async (req, res) => {
             fullName: user.fullName,
             email: user.email,
             photo: user.photo,
-            message: "Login Successfull"
+            message: "Login Successfull",
+            token: token
         };
         res.status(200).json({
             ...userData,

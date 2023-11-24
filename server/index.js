@@ -9,7 +9,9 @@ app.use(express.json());
 
 // API routes setup
 const userRoutes = require('./Routes/Users');
+const postRoutes = require('./Routes/Post');
 app.use('/api/users', userRoutes);
+app.use('/api/post', postRoutes);
 
 
 // Connect to MongoDB

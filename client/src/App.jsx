@@ -11,11 +11,14 @@ import Blogs from './Components/Blogs/Blogs';
 import Contact from './Components/Contact';
 import Users from './Components/Profile/Users';
 import { Toaster } from 'react-hot-toast';
+import Editor from './Components/Editor/Editor';
+import Article from './Components/Blogs/Article';
+import Posts from './Components/Blogs/Posts';
 
 function App() {
   const location = useLocation();
   const isAuthPage = location.pathname === '/signup' || location.pathname === '/login';
-
+  const { user } = useContext(AuthContext);
   return (
     <>
 
@@ -23,15 +26,18 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/blogs" element={<Blogs />} />
+        <Route path="/posts" element={<Posts />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/profile/:userId" element={<Users />} />
-        <Route path="/*" element={<Error />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/profile/:userId" element={user ? <Users /> : <Navigate to={'/login'} />} />
+        <Route path="/*" element={<Error title="Sorry, we couldn't find this page." btnTitle="Return to Homepage" />} />
+        <Route path="/signup" element={!user ? <Signup /> : <Navigate to={'/'} />} />
+        <Route path="/login" element={!user ? <Login /> : <Navigate to={'/'} />} />
+        <Route path="/editor" element={<Editor />} />
+        <Route path="/post/add" element={user ? <Article /> : <Navigate to={'/login'} />} />
       </Routes>
       {!isAuthPage && <Footer />}
       <Toaster
-        position="bottom-right"
+        position="top-center"
       />
     </>
   );

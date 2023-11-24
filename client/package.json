@@ -12,11 +12,14 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.7.17",
+    "@tinymce/tinymce-react": "^4.3.2",
     "axios": "^1.6.1",
     "firebase": "^10.6.0",
+    "html-react-parser": "^5.0.6",
     "lucide-react": "^0.292.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.48.2",
     "react-hot-toast": "^2.4.1",
     "react-router-dom": "^6.18.0",
     "react-spinners": "^0.13.8"
