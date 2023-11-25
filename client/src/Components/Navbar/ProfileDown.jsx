@@ -1,6 +1,6 @@
 import { Fragment, useContext, useEffect, useState } from 'react';
 import { Menu, Transition } from '@headlessui/react';
-import { BellIcon, UserIcon, SettingsIcon, PlusIcon, LogOut, ChevronDownIcon } from 'lucide-react';
+import { BellIcon, UserIcon, SettingsIcon, PlusIcon, LogOut, ChevronDownIcon, ChevronUpIcon, FileText } from 'lucide-react';
 import { AuthContext } from '../Context/AuthContext';
 import { NavLink, useNavigate } from 'react-router-dom';
 
@@ -9,13 +9,14 @@ function classNames(...classes) {
 }
 
 export default function ProfileDropDown() {
-    const { setLogin, userImage } = useContext(AuthContext);
+    const { userImage } = useContext(AuthContext);
     const [user, setUserState] = useState(JSON.parse(localStorage.getItem('user')) || {});
+
 
     useEffect(() => {
         const userData = JSON.parse(localStorage.getItem('user')) || {};
         setUserState(userData);
-    }, []);
+    }, [setUserState]);
 
     const navigate = useNavigate();
     const logOut = () => {
@@ -23,6 +24,7 @@ export default function ProfileDropDown() {
         window.location.reload();
         localStorage.removeItem('user');
         localStorage.removeItem('token');
+        setUserState(null);
         // setLogin(false);
     };
 
@@ -35,16 +37,16 @@ export default function ProfileDropDown() {
             >
                 <span className="absolute -inset-1.5" />
                 <span className="sr-only">View notifications</span>
-                <BellIcon className="h-6 w-6" aria-hidden="true" />
+                <BellIcon className="h-6 w-6" />
             </button>
 
             <Menu as="div" className="relative ml-3">
                 <div className='flex justify-center items-center'>
                     <Menu.Button className="relative flex rounded-full text-sm">
                         <span className="absolute -inset-1.5" />
-                        <img className="h-8 w-8 rounded-full" src={user?.photo || userImage} alt="" />
+                        <img className="h-8 w-8 rounded-full" src={user.photo || userImage} alt="" />
                     </Menu.Button>
-                    <ChevronDownIcon size={18} aria-hidden="true" />
+
                 </div>
 
                 <Transition
@@ -83,7 +85,7 @@ export default function ProfileDropDown() {
                                 <NavLink to="/posts"
                                     className={classNames(active ? 'bg-gray-100' : '', 'px-4 py-2 text-sm text-gray-700 flex gap-5 items-center')}
                                 >
-                                    <PlusIcon className="ml-2 h-4 w-4" aria-hidden="true" />
+                                    <FileText className="ml-2 h-4 w-4" aria-hidden="true" />
                                     My Posts
                                 </NavLink>
                             )}

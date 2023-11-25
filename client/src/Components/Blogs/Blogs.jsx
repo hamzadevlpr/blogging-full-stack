@@ -1,280 +1,114 @@
-import React from 'react'
+import axios from 'axios';
+import React, { useEffect, useState, useContext } from 'react';
+import { POST_API_URL } from '../../config';
+import { AuthContext } from '../Context/AuthContext';
+import { toast } from 'react-hot-toast';
+import ClipLoader from 'react-spinners/ClipLoader';
+import { NavLink } from 'react-router-dom';
+import Error from '../ErrorPages/Error';
+import { Pen, Trash2 } from 'lucide-react';
 
 function Blogs() {
+    const [blogs, setBlogs] = useState([]);
+    const { user } = useContext(AuthContext);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchPosts = async () => {
+            try {
+                const response = await axios.get(POST_API_URL);
+
+                // Axios automatically parses the JSON response
+                if (response.status === 200) {
+                    setBlogs(response.data);
+                }
+                setLoading(false);
+            } catch (error) {
+                toast.error('Error fetching posts: ' + error.message);
+                setLoading(false);
+            }
+        };
+
+        if (user) {
+            fetchPosts();
+        }
+    }, [user]);
+
     return (
         <>
-            <div className="mx-auto max-w-6xl pt-12">
-                <div className="mx-auto grid w-full sm:px-10 grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-16 sm:grid-cols-2">
-                    {/* <PostCard v-for="post in posts" :post="post" /> */}
-                    {/* 1 */}
-                    <div className="flex flex-col gap-4">
-                        <a href="/blog/create-razor-ui-landing-page-using-tailwind-css/">
-                            <img
-                                src="https://www.tailwindcollections.com/assets/Frame-77-1-1_dNq32.webp"
-                                width={1200}
-                                height={630}
-                                alt="Featured image for Create Razor UI Landing Page using Tailwind CSS"
-                                className="aspect-video w-full rounded-xl border border-white object-cover shadow-solid transition-transform hover:-translate-y-2 hover:-rotate-1 hover:scale-105"
-                            />
-                        </a>
-                        <a href="/blog/create-razor-ui-landing-page-using-tailwind-css/">
-                            <h3 className="mt-4 font-display text-lg font-bold leading-6 text-black lg:mt-0 lg:text-xl">
-                                Create Razor UI Landing Page using Tailwind CSS
-                            </h3>
-                        </a>
-                        <div className="flex flex-wrap items-center gap-2">
-                            {/*[*/}
-                            <a href="/tags/dark-theme">
-                                <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-0.5 text-[13px] font-medium text-gray-800 transition-colors hover:bg-gray-200">
-                                    {" "}
-                                    #Dark theme
-                                </span>
-                            </a>
-                            <a href="/tags/landing-page">
-                                <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-0.5 text-[13px] font-medium text-gray-800 transition-colors hover:bg-gray-200">
-                                    {" "}
-                                    #Landing page
-                                </span>
-                            </a>
-                            {/*]*/}
-                        </div>
-                    </div>
-                    {/* 2 */}
-                    <div className="flex flex-col gap-4">
-                        <a href="/blog/create-razor-ui-landing-page-using-tailwind-css/">
-                            <img
-                                src="https://www.tailwindcollections.com/assets/Frame-77-1-1_dNq32.webp"
-                                width={1200}
-                                height={630}
-                                alt="Featured image for Create Razor UI Landing Page using Tailwind CSS"
-                                className="aspect-video w-full rounded-xl border border-white object-cover shadow-solid transition-transform hover:-translate-y-2 hover:-rotate-1 hover:scale-105"
-                            />
-                        </a>
-                        <a href="/blog/create-razor-ui-landing-page-using-tailwind-css/">
-                            <h3 className="mt-4 font-display text-lg font-bold leading-6 text-black lg:mt-0 lg:text-xl">
-                                Create Razor UI Landing Page using Tailwind CSS
-                            </h3>
-                        </a>
-                        <div className="flex flex-wrap items-center gap-2">
-                            {/*[*/}
-                            <a href="/tags/dark-theme">
-                                <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-0.5 text-[13px] font-medium text-gray-800 transition-colors hover:bg-gray-200">
-                                    {" "}
-                                    #Dark theme
-                                </span>
-                            </a>
-                            <a href="/tags/landing-page">
-                                <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-0.5 text-[13px] font-medium text-gray-800 transition-colors hover:bg-gray-200">
-                                    {" "}
-                                    #Landing page
-                                </span>
-                            </a>
-                            {/*]*/}
-                        </div>
-                    </div>
-                    {/* 3 */}
-                    <div className="flex flex-col gap-4">
-                        <a href="/blog/create-razor-ui-landing-page-using-tailwind-css/">
-                            <img
-                                src="https://www.tailwindcollections.com/assets/Frame-77-1-1_dNq32.webp"
-                                width={1200}
-                                height={630}
-                                alt="Featured image for Create Razor UI Landing Page using Tailwind CSS"
-                                className="aspect-video w-full rounded-xl border border-white object-cover shadow-solid transition-transform hover:-translate-y-2 hover:-rotate-1 hover:scale-105"
-                            />
-                        </a>
-                        <a href="/blog/create-razor-ui-landing-page-using-tailwind-css/">
-                            <h3 className="mt-4 font-display text-lg font-bold leading-6 text-black lg:mt-0 lg:text-xl">
-                                Create Razor UI Landing Page using Tailwind CSS
-                            </h3>
-                        </a>
-                        <div className="flex flex-wrap items-center gap-2">
-                            {/*[*/}
-                            <a href="/tags/dark-theme">
-                                <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-0.5 text-[13px] font-medium text-gray-800 transition-colors hover:bg-gray-200">
-                                    {" "}
-                                    #Dark theme
-                                </span>
-                            </a>
-                            <a href="/tags/landing-page">
-                                <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-0.5 text-[13px] font-medium text-gray-800 transition-colors hover:bg-gray-200">
-                                    {" "}
-                                    #Landing page
-                                </span>
-                            </a>
-                            {/*]*/}
-                        </div>
-                    </div>
-                    {/* 4 */}
-                    <div className="flex flex-col gap-4">
-                        <a href="/blog/create-razor-ui-landing-page-using-tailwind-css/">
-                            <img
-                                src="https://www.tailwindcollections.com/assets/Frame-77-1-1_dNq32.webp"
-                                width={1200}
-                                height={630}
-                                alt="Featured image for Create Razor UI Landing Page using Tailwind CSS"
-                                className="aspect-video w-full rounded-xl border border-white object-cover shadow-solid transition-transform hover:-translate-y-2 hover:-rotate-1 hover:scale-105"
-                            />
-                        </a>
-                        <a href="/blog/create-razor-ui-landing-page-using-tailwind-css/">
-                            <h3 className="mt-4 font-display text-lg font-bold leading-6 text-black lg:mt-0 lg:text-xl">
-                                Create Razor UI Landing Page using Tailwind CSS
-                            </h3>
-                        </a>
-                        <div className="flex flex-wrap items-center gap-2">
-                            {/*[*/}
-                            <a href="/tags/dark-theme">
-                                <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-0.5 text-[13px] font-medium text-gray-800 transition-colors hover:bg-gray-200">
-                                    {" "}
-                                    #Dark theme
-                                </span>
-                            </a>
-                            <a href="/tags/landing-page">
-                                <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-0.5 text-[13px] font-medium text-gray-800 transition-colors hover:bg-gray-200">
-                                    {" "}
-                                    #Landing page
-                                </span>
-                            </a>
-                            {/*]*/}
-                        </div>
-                    </div>
-                    {/* 5 */}
-                    <div className="flex flex-col gap-4">
-                        <a href="/blog/create-razor-ui-landing-page-using-tailwind-css/">
-                            <img
-                                src="https://www.tailwindcollections.com/assets/Frame-77-1-1_dNq32.webp"
-                                width={1200}
-                                height={630}
-                                alt="Featured image for Create Razor UI Landing Page using Tailwind CSS"
-                                className="aspect-video w-full rounded-xl border border-white object-cover shadow-solid transition-transform hover:-translate-y-2 hover:-rotate-1 hover:scale-105"
-                            />
-                        </a>
-                        <a href="/blog/create-razor-ui-landing-page-using-tailwind-css/">
-                            <h3 className="mt-4 font-display text-lg font-bold leading-6 text-black lg:mt-0 lg:text-xl">
-                                Create Razor UI Landing Page using Tailwind CSS
-                            </h3>
-                        </a>
-                        <div className="flex flex-wrap items-center gap-2">
-                            {/*[*/}
-                            <a href="/tags/dark-theme">
-                                <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-0.5 text-[13px] font-medium text-gray-800 transition-colors hover:bg-gray-200">
-                                    {" "}
-                                    #Dark theme
-                                </span>
-                            </a>
-                            <a href="/tags/landing-page">
-                                <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-0.5 text-[13px] font-medium text-gray-800 transition-colors hover:bg-gray-200">
-                                    {" "}
-                                    #Landing page
-                                </span>
-                            </a>
-                            {/*]*/}
-                        </div>
-                    </div>
-                    {/* 6 */}
-                    <div className="flex flex-col gap-4">
-                        <a href="/blog/create-razor-ui-landing-page-using-tailwind-css/">
-                            <img
-                                src="https://www.tailwindcollections.com/assets/Frame-77-1-1_dNq32.webp"
-                                width={1200}
-                                height={630}
-                                alt="Featured image for Create Razor UI Landing Page using Tailwind CSS"
-                                className="aspect-video w-full rounded-xl border border-white object-cover shadow-solid transition-transform hover:-translate-y-2 hover:-rotate-1 hover:scale-105"
-                            />
-                        </a>
-                        <a href="/blog/create-razor-ui-landing-page-using-tailwind-css/">
-                            <h3 className="mt-4 font-display text-lg font-bold leading-6 text-black lg:mt-0 lg:text-xl">
-                                Create Razor UI Landing Page using Tailwind CSS
-                            </h3>
-                        </a>
-                        <div className="flex flex-wrap items-center gap-2">
-                            {/*[*/}
-                            <a href="/tags/dark-theme">
-                                <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-0.5 text-[13px] font-medium text-gray-800 transition-colors hover:bg-gray-200">
-                                    {" "}
-                                    #Dark theme
-                                </span>
-                            </a>
-                            <a href="/tags/landing-page">
-                                <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-0.5 text-[13px] font-medium text-gray-800 transition-colors hover:bg-gray-200">
-                                    {" "}
-                                    #Landing page
-                                </span>
-                            </a>
-                            {/*]*/}
-                        </div>
-                    </div>
-                    {/* 7 */}
-                    <div className="flex flex-col gap-4">
-                        <a href="/blog/create-razor-ui-landing-page-using-tailwind-css/">
-                            <img
-                                src="https://www.tailwindcollections.com/assets/Frame-77-1-1_dNq32.webp"
-                                width={1200}
-                                height={630}
-                                alt="Featured image for Create Razor UI Landing Page using Tailwind CSS"
-                                className="aspect-video w-full rounded-xl border border-white object-cover shadow-solid transition-transform hover:-translate-y-2 hover:-rotate-1 hover:scale-105"
-                            />
-                        </a>
-                        <a href="/blog/create-razor-ui-landing-page-using-tailwind-css/">
-                            <h3 className="mt-4 font-display text-lg font-bold leading-6 text-black lg:mt-0 lg:text-xl">
-                                Create Razor UI Landing Page using Tailwind CSS
-                            </h3>
-                        </a>
-                        <div className="flex flex-wrap items-center gap-2">
-                            {/*[*/}
-                            <a href="/tags/dark-theme">
-                                <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-0.5 text-[13px] font-medium text-gray-800 transition-colors hover:bg-gray-200">
-                                    {" "}
-                                    #Dark theme
-                                </span>
-                            </a>
-                            <a href="/tags/landing-page">
-                                <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-0.5 text-[13px] font-medium text-gray-800 transition-colors hover:bg-gray-200">
-                                    {" "}
-                                    #Landing page
-                                </span>
-                            </a>
-                            {/*]*/}
-                        </div>
-                    </div>
-                    {/* 8 */}
-                    <div className="flex flex-col gap-4">
-                        <a href="/blog/create-razor-ui-landing-page-using-tailwind-css/">
-                            <img
-                                src="https://www.tailwindcollections.com/assets/Frame-77-1-1_dNq32.webp"
-                                width={1200}
-                                height={630}
-                                alt="Featured image for Create Razor UI Landing Page using Tailwind CSS"
-                                className="aspect-video w-full rounded-xl border border-white object-cover shadow-solid transition-transform hover:-translate-y-2 hover:-rotate-1 hover:scale-105"
-                            />
-                        </a>
-                        <a href="/blog/create-razor-ui-landing-page-using-tailwind-css/">
-                            <h3 className="mt-4 font-display text-lg font-bold leading-6 text-black lg:mt-0 lg:text-xl">
-                                Create Razor UI Landing Page using Tailwind CSS
-                            </h3>
-                        </a>
-                        <div className="flex flex-wrap items-center gap-2">
-                            {/*[*/}
-                            <a href="/tags/dark-theme">
-                                <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-0.5 text-[13px] font-medium text-gray-800 transition-colors hover:bg-gray-200">
-                                    {" "}
-                                    #Dark theme
-                                </span>
-                            </a>
-                            <a href="/tags/landing-page">
-                                <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-0.5 text-[13px] font-medium text-gray-800 transition-colors hover:bg-gray-200">
-                                    {" "}
-                                    #Landing page
-                                </span>
-                            </a>
-                            {/*]*/}
-                        </div>
-                    </div>
+            {loading ? (
+                <div className="h-screen flex justify-center items-center border">
+                    <ClipLoader loading={loading} size={60} />
                 </div>
-            </div>
+            ) : (
+                <div className="mx-auto max-w-6xl pt-12 sm:px-0 px-12">
+                    {blogs.length > 0 ? (
+                        <div className="mx-auto grid w-full sm:px-10 grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-16 sm:grid-cols-2">
+                            {blogs.map((blog) => (
+                                <div className="flex flex-col gap-4 justify-between">
 
+                                    <div>
+                                        <NavLink to={blog.slug}>
+                                            <img
+                                                src={blog.featuredImage}
+                                                width={1200}
+                                                height={630}
+                                                alt="Featured image for Create Razor UI Landing Page using Tailwind CSS"
+                                                className="aspect-video w-full rounded-xl border border-white object-cover shadow-solid transition-transform hover:-translate-y-2 hover:-rotate-1 hover:scale-105"
+                                            />
+                                        </NavLink>
+                                        <NavLink to={blog.slug}>
+                                            <h3 className="line-clamp-2 mt-4 font-display text-lg font-bold leading-6 text-black lg:mt-0 lg:text-xl">
+                                                {blog.title}
+                                            </h3>
+                                        </NavLink>
+                                    </div>
+
+
+                                    <div className="flex flex-wrap items-center gap-2">
+                                        {blog.user_id === user._id && (
+                                            <div className="flex flex-wrap items-center gap-2">
+                                                <NavLink
+                                                    to={`/post/edit/${blog._id}`}
+                                                    className="inline-flex items-center gap-2 rounded-full bg-green-100 px-3 py-0.5 text-[13px] font-medium text-gray-800 transition-colors hover:bg-green-200"
+                                                >
+                                                    <Pen size={10} /> <span>Edit</span>
+                                                </NavLink>
+                                                <NavLink
+                                                    to={`/post/delete/${blog._id}`}
+                                                    className="inline-flex items-center gap-3 rounded-full bg-red-100 px-3 py-0.5 text-[13px] font-medium text-gray-800 transition-colors hover:bg-red-200"
+                                                >
+                                                    <Trash2 size={10} /> <span>Delete</span>
+                                                </NavLink>
+                                            </div>
+                                        )}
+                                        {/* // fetch user photo and name */}
+
+                                    </div>
+
+
+                                    <div >
+                                        <NavLink to={`/profile/${blog.user_id}`} className='flex items-center gap-3'>
+                                            <img
+                                                src={blog.user.photo}
+                                                alt="avatar"
+                                                className="w-8 h-8 rounded-full"
+                                            />
+                                            <span className="text-gray-500 text-sm">{blog.user.name}</span>
+                                        </NavLink>
+                                    </div>
+
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <Error title="You haven't created any posts" btnTitle="Create a Post" />
+                    )}
+                </div>
+            )}
         </>
-    )
+
+    );
 }
 
-export default Blogs
+export default Blogs;

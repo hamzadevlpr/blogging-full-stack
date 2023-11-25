@@ -3,7 +3,7 @@ import logo from '../../assets/logo.svg'
 function Footer() {
     return (
         <>
-            <section className="z-0 relative overflow-hidden bg-white py-8">
+            <section className="z-0 overflow-hidden bg-white py-8 relative bottom-0 w-full">
                 <div className="container relative z-10 mx-auto px-4">
                     <div className="-m-8 flex flex-wrap items-center sm:justify-between justify-center">
                         {/* logo */}

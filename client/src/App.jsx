@@ -14,11 +14,12 @@ import { Toaster } from 'react-hot-toast';
 import Editor from './Components/Editor/Editor';
 import Article from './Components/Blogs/Article';
 import Posts from './Components/Blogs/Posts';
+import PostDetail from './Components/Blogs/PostDetail';
 
 function App() {
   const location = useLocation();
   const isAuthPage = location.pathname === '/signup' || location.pathname === '/login';
-  const { user } = useContext(AuthContext);
+  const user = localStorage.getItem('user');
   return (
     <>
 
@@ -27,6 +28,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/blogs" element={<Blogs />} />
         <Route path="/posts" element={<Posts />} />
+        <Route path="/posts/:slug" element={<PostDetail />} />
+        <Route path="/blogs/:slug" element={<PostDetail />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/profile/:userId" element={user ? <Users /> : <Navigate to={'/login'} />} />
         <Route path="/*" element={<Error title="Sorry, we couldn't find this page." btnTitle="Return to Homepage" />} />

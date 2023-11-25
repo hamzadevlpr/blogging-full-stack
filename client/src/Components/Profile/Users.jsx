@@ -59,6 +59,8 @@ const Users = () => {
             setUserState(response.data);
             localStorage.setItem('user', JSON.stringify(response.data));
             toast.success('User updated successfully!');
+            setUser(response.data);
+            setLoading(false);
         } catch (error) {
             console.error('Error updating user:', error);
             toast.error('Error updating user. Please try again.');
@@ -72,7 +74,7 @@ const Users = () => {
             {
                 user ?
                     <div className="p-6 flex items-center justify-center mt-20">
-                        <div className="container max-w-screen-lg mx-auto border py-20 shadow-md">
+                        <div className="container max-w-screen-lg mx-auto py-20">
                             <form className="mt-10 px-10" onSubmit={handleSubmit}>
                                 <div className="flex justify-center items-center relative -top-20">
                                     <img

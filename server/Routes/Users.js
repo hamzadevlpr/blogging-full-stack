@@ -85,6 +85,7 @@ router.put('/:userId', async (req, res) => {
     }
 });
 
+// fetch post detail using slug
 
 
 
