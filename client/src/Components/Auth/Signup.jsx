@@ -25,7 +25,6 @@ export function Signup() {
                     email: email,
                     password: password
                 });
-                localStorage.setItem('user', JSON.stringify(response.data));
                 toast.success(response.data.message);
                 navigate('/login');
             } catch (err) {

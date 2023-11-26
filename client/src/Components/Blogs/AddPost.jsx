@@ -18,16 +18,8 @@ function Article() {
     const [loading, setLoading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
     const { user } = useContext(AuthContext);
-
     const editorRef = useRef(null);
 
-    const log = () => {
-        if (editorRef.current) {
-            const content = editorRef.current.getContent();
-            console.log(content);
-            setEditorContent(content);
-        }
-    };
     const onSubmit = async (data) => {
 
         if (!user) {
@@ -35,7 +27,6 @@ function Article() {
             return;
         }
         setLoading(true);
-
         try {
             let downloadURL = '';
 
@@ -79,7 +70,7 @@ function Article() {
                     featuredImage: downloadURL,
                 }, {
                     headers: {
-                        'Authorization': `Bearer ${user.token}`
+                        Authorization: `Bearer ${user.token}`,
                     }
                 }
                 );

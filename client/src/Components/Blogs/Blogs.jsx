@@ -10,13 +10,17 @@ import { Pen, Trash2 } from 'lucide-react';
 
 function Blogs() {
     const [blogs, setBlogs] = useState([]);
-    const { user } = useContext(AuthContext);
+    const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const response = await axios.get(POST_API_URL);
+                const response = await axios.get(POST_API_URL, {
+                    headers: {
+                        Authorization: `Bearer ${user.token}`,
+                    },
+                });
 
                 // Axios automatically parses the JSON response
                 if (response.status === 200) {
@@ -24,15 +28,13 @@ function Blogs() {
                 }
                 setLoading(false);
             } catch (error) {
-                toast.error('Error fetching posts: ' + error.message);
+                console.log('Error fetching posts: ' + error.message);
                 setLoading(false);
             }
         };
 
-        if (user) {
-            fetchPosts();
-        }
-    }, [user]);
+        fetchPosts();
+    }, []);
 
     return (
         <>
@@ -45,7 +47,7 @@ function Blogs() {
                     {blogs.length > 0 ? (
                         <div className="mx-auto grid w-full sm:px-10 grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-16 sm:grid-cols-2">
                             {blogs.map((blog) => (
-                                <div className="flex flex-col gap-4 justify-between">
+                                <div key={blog._id} className="flex flex-col gap-4 justify-between">
 
                                     <div>
                                         <NavLink to={blog.slug}>
@@ -69,13 +71,13 @@ function Blogs() {
                                         {blog.user_id === user._id && (
                                             <div className="flex flex-wrap items-center gap-2">
                                                 <NavLink
-                                                    to={`/post/edit/${blog._id}`}
+                                                    to={`/blog/edit/${blog.slug}`}
                                                     className="inline-flex items-center gap-2 rounded-full bg-green-100 px-3 py-0.5 text-[13px] font-medium text-gray-800 transition-colors hover:bg-green-200"
                                                 >
                                                     <Pen size={10} /> <span>Edit</span>
                                                 </NavLink>
                                                 <NavLink
-                                                    to={`/post/delete/${blog._id}`}
+                                                    to={`/blog/delete/${blog._id}`}
                                                     className="inline-flex items-center gap-3 rounded-full bg-red-100 px-3 py-0.5 text-[13px] font-medium text-gray-800 transition-colors hover:bg-red-200"
                                                 >
                                                     <Trash2 size={10} /> <span>Delete</span>

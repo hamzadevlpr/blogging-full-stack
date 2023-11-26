@@ -55,7 +55,6 @@ export function Login() {
                 });
                 if (response.status === 200) {
                     localStorage.setItem('user', JSON.stringify(response.data));
-                    localStorage.setItem('token', JSON.stringify(response.data.token));
                     toast.success(response.data.message);
                     setUser(response.data);
                     navigate('/');

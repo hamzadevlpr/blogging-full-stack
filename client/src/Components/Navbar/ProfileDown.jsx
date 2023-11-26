@@ -44,7 +44,7 @@ export default function ProfileDropDown() {
                 <div className='flex justify-center items-center'>
                     <Menu.Button className="relative flex rounded-full text-sm">
                         <span className="absolute -inset-1.5" />
-                        <img className="h-8 w-8 rounded-full" src={user.photo || userImage} alt="" />
+                        <img className="h-8 w-8 rounded-full object-cover" src={user.photo || userImage} alt="" />
                     </Menu.Button>
 
                 </div>

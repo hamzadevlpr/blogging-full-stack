@@ -28,7 +28,7 @@ function Posts() {
                 }
                 setLoading(false);
             } catch (error) {
-                toast.error('Error fetching posts: ' + error.message);
+                console.log('Error fetching posts: ' + error.message);
                 setLoading(false);
             }
         };
@@ -68,7 +68,7 @@ function Posts() {
                                         {blog.user_id === user._id && (
                                             <div className="flex flex-wrap items-center gap-2">
                                                 <NavLink
-                                                    to={`/post/edit/${blog._id}`}
+                                                    to={`/blog/edit/${blog.slug}`}
                                                     className="inline-flex items-center gap-2 rounded-full bg-green-100 px-3 py-0.5 text-[13px] font-medium text-gray-800 transition-colors hover:bg-green-200"
                                                 >
                                                     <Pen size={10} /> <span>Edit</span>

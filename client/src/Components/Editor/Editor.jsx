@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
-import Article from '../Blogs/Article';
 
 
 export default function App() {

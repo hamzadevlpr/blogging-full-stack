@@ -22,13 +22,12 @@ router.post('/signup', async (req, res) => {
         const salt = await bcrypt.genSalt();
         const hashedPassword = await bcrypt.hash(password, salt);
 
-
         const newUser = new User({ fullName, email, password: hashedPassword });
         await newUser.save();
-        // create token
-        // const token = createToken(newUser._id);
 
-        res.status(201).json({ message: 'User registered successfully', email: newUser.email });
+        // cretate token
+        const token = createToken(newUser._id);
+        res.status(201).json({ message: 'User registered successfully', email: newUser.email, token: token });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -54,16 +53,13 @@ router.post('/login', async (req, res) => {
         }
         const token = createToken(user._id);
 
-        const userData = {
+        res.status(200).json({
             _id: user._id,
             fullName: user.fullName,
             email: user.email,
             photo: user.photo,
             message: "Login Successfull",
             token: token
-        };
-        res.status(200).json({
-            ...userData,
         });
     } catch (err) {
         console.error(err);
@@ -78,7 +74,7 @@ router.put('/:userId', async (req, res) => {
         const updatedUser = await User.findByIdAndUpdate(userId,
             { fullName, email, photo }, { new: true }).select('-password');
 
-        res.json(updatedUser);
+        res.status(200).json(updatedUser);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });

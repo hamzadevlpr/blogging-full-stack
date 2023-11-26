@@ -23,10 +23,16 @@ const Users = () => {
     const { userId } = useParams();
 
     useEffect(() => {
-        // Fetch user data from local storage or wherever it is stored
-        const userData = JSON.parse(localStorage.getItem('user')) || {};
-        setUserState(userData);
-        setUser(userData);
+        //fetch user data from api
+        const getUser = async () => {
+            try {
+                const response = await axios.get(`${USER_API_URL}/${userId}`);
+                setUserState(response.data);
+            } catch (error) {
+                console.error('Error fetching user:', error);
+            }
+        };
+        getUser();
     }, []);
 
     const handleChange = (e) => {
@@ -50,24 +56,34 @@ const Users = () => {
                 setIsPhotoUploaded(true);
             }
 
-            const response = await axios.put(`${USER_API_URL}/${userId}`, {
+            const updatedUserData = {
                 fullName: fullName,
                 email: email,
                 photo: downloadURL || user.photo || '',
-            });
+            };
+
+            // Update only the specific fields in local storage
+            localStorage.setItem(
+                'user',
+                JSON.stringify({
+                    ...user,
+                    ...updatedUserData,
+                })
+            );
+
+            const response = await axios.put(`${USER_API_URL}/${userId}`, updatedUserData);
 
             setUserState(response.data);
-            localStorage.setItem('user', JSON.stringify(response.data));
             toast.success('User updated successfully!');
             setUser(response.data);
             setLoading(false);
         } catch (error) {
             console.error('Error updating user:', error);
             toast.error('Error updating user. Please try again.');
-        } finally {
             setLoading(false);
         }
     };
+
 
     return (
         <>
@@ -78,7 +94,7 @@ const Users = () => {
                             <form className="mt-10 px-10" onSubmit={handleSubmit}>
                                 <div className="flex justify-center items-center relative -top-20">
                                     <img
-                                        className="bg-white shadow-lg absolute border w-40 h-40 rounded-full object-contain"
+                                        className="bg-white shadow-lg absolute border w-40 h-40 rounded-full object-cover"
                                         src={selectedFile ? URL.createObjectURL(selectedFile) : photo}
                                         alt="User"
                                     />

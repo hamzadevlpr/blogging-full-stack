@@ -3,6 +3,7 @@ const requireAuth = require('../middleware/Authentication.js');
 const router = express.Router();
 const Post = require('../Models/PostSchema');
 const User = require('../Models/UserModels');
+const Comment = require('../Models/CommentSchema.js');
 
 
 
@@ -28,8 +29,6 @@ router.get('/', async (req, res) => {
 });
 // Require authentication for all routes using requireAuth middleware
 router.use(requireAuth);
-
-
 
 router.get('/myposts', async (req, res) => {
     try {
@@ -85,6 +84,7 @@ router.post('/add', async (req, res) => {
     }
 });
 
+
 router.get('/:slug', async (req, res) => {
     const slug = req.params.slug;
 
@@ -102,7 +102,7 @@ router.get('/:slug', async (req, res) => {
             month: 'long',
             year: 'numeric',
         });
-        
+
         const postWithUserInfo = {
             ...postWithoutUser,
             user: {
@@ -117,6 +117,49 @@ router.get('/:slug', async (req, res) => {
     } catch (error) {
         console.error('Error fetching post details:', error.message);
         res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+
+router.post('/comments', async (req, res) => {
+    try {
+        const { user, comment, post } = req.body;
+
+        // Create a new comment
+        const newComment = new Comment({
+            user,
+            comment,
+            post,
+        });
+
+        // Save the comment to the database
+        const savedComment = await newComment.save();
+
+        res.status(201).json({ message: 'Comment Created Successfully!', comment: savedComment });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error.' });
+    }
+});
+
+// Create a route to get comments for a specific post
+router.get('/comments/:postSlug', async (req, res) => {
+    try {
+        const { postSlug } = req.params;
+
+        // Assuming you have a Post model with a 'slug' field
+        const post = await Post.findOne({ slug: postSlug });
+
+        if (!post) {
+            return res.status(404).json({ error: 'Post not found' });
+        }
+
+        const comments = await Comment.find({ post: post._id }).populate('user', 'fullName photo');
+
+        res.json(comments);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
