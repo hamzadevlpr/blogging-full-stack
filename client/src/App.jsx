@@ -16,6 +16,7 @@ import AddPost from './Components/Blogs/AddPost';
 import Posts from './Components/Blogs/Posts';
 import PostDetail from './Components/Blogs/PostDetail';
 import EditPost from './Components/Blogs/EditPost';
+import URLChecker from './Components/Practices/URLChecker';
 
 function App() {
   const location = useLocation();
@@ -39,6 +40,7 @@ function App() {
         <Route path="/signup" element={!user ? <Signup /> : <Navigate to={'/'} />} />
         <Route path="/login" element={!user ? <Login /> : <Navigate to={'/'} />} />
         <Route path="/editor" element={<Editor />} />
+        <Route path="/check" element={<URLChecker />} />
         <Route path="/post/add" element={user ? <AddPost /> : <Navigate to={'/login'} />} />
       </Routes>
       {!isAuthPage && <Footer />}
