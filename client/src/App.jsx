@@ -26,21 +26,14 @@ function App() {
   const user = localStorage.getItem('user');
 
   useEffect(() => {
-    const SERVER_URL = 'https://main-blogs-web-app.onrender.com/api/post';
 
     const checkUrlValidity = async () => {
       try {
-        const response = await axios.get(`${CHECK_URL}/?url=https://main-blogs-web-app.onrender.com/api/post`);
-        const { isValid } = response.data;
-
-        // Assuming `settings` is defined somewhere in your component
         toast.promise(
-          isValid
-            ? Promise.resolve()
-            : Promise.reject(new Error('Invalid URL')),
+          axios.get(`${CHECK_URL}/?url=https://main-blogs-web-app.onrender.com/api/post`),
           {
-            loading: 'Checking URL...',
-            success: <span>Hurry! Backend is Connected!</span>,
+            loading: 'Checking Server...',
+            success: <span>Hurry! Server is Live!</span>,
             error: <span>Server Error.</span>,
           }
         );

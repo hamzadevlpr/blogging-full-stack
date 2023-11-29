@@ -174,18 +174,19 @@ function Article() {
                             <label htmlFor="file" className="text-base font-medium text-gray-900">
                                 Featured Image
                             </label>
+
                             <div className="mt-2">
                                 <div className="flex items-center justify-center">
                                     <div className="mx-auto w-full bg-white">
                                         <div className="mb-5">
                                             <div className="mb-5">
-                                                {!watchFile && (
+                                                {watchFile && (
                                                     <input type="file" name="file" id="file" className="sr-only" onChange={handleFileChange} />
                                                 )}
                                                 <label
                                                     htmlFor="file"
-                                                    className={`${watchFile ? 'cursor-not-allowed' : 'cursor-pointer'} relative flex min-h-[200px] items-center justify-center rounded-md border border-dashed border-gray-400 p-12 text-center`}
-                                                    title={`${watchFile ? 'Only one image allowed' : 'Select Featured Image  '}`}
+                                                    className={`${watchFile ? 'hidden' : 'cursor-pointer'} relative flex min-h-[200px] items-center justify-center rounded-md border border-dashed border-gray-400 p-12 text-center`}
+                                                    title='Only one image allowed'
                                                 >
                                                     <div>
                                                         <span className="mb-2 block text-xl font-semibold text-[#07074D]">Drop files here</span>
@@ -198,37 +199,20 @@ function Article() {
                                             </div>
 
                                             {watchFile && (
-                                                <div className="rounded-md bg-[#F5F7FB] py-4 px-8">
-                                                    <div className="flex gap-3">
-                                                        <div>
-                                                            <img
-                                                                src={(watchFile && URL.createObjectURL(watchFile)) || urlImage}
-                                                                className="border w-20 h-20 mr-5"
-                                                                alt="Selected file"
-                                                            />
-                                                        </div>
-                                                        <div className="w-full">
-                                                            <div className="flex items-center justify-between">
-                                                                <span className="truncate text-base font-medium text-[#07074D]">
-                                                                    {(watchFile && watchFile.name) || urlImage}
-                                                                </span>
-                                                                <button className="text-[#07074D]" onClick={() => setValue('file', null)}>
-                                                                    <X />
-                                                                </button>
-                                                            </div>
-                                                            <div className="flex justify-center items-center gap-3 mt-5">
-                                                                <div className="relative h-[6px] w-full rounded-lg bg-[#E2E5EF]">
-                                                                    <div
-                                                                        className="absolute left-0 right-0 h-full w-[${uploadProgress}%] rounded-lg bg-[#6A64F1]"
-                                                                        style={{ width: `${uploadProgress}%` }}
-                                                                    />
-                                                                </div>
-                                                                <span>{Math.round(uploadProgress)}%</span>
-                                                            </div>
-                                                        </div>
+                                                <div className="flex gap-3 relative">
+                                                    <div>
+                                                        <img
+                                                            src={(watchFile && URL.createObjectURL(watchFile)) || urlImage}
+                                                            className="object-contain w-full mr-5"
+                                                            alt="Selected file"
+                                                        />
                                                     </div>
+                                                    <button className="absolute right-3 top-3 bg-gray-700 text-white rounded-full p-2" onClick={() => setValue('file', null)}>
+                                                        <X size={18}/>
+                                                    </button>
                                                 </div>
                                             )}
+
 
                                         </div>
                                         <div>

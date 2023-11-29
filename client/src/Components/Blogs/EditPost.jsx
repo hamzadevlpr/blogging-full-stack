@@ -16,6 +16,7 @@ function EditPost() {
     const watchFile = watch('file');
     const [editorContent, setEditorContent] = useState('');
     const [loading, setLoading] = useState(false);
+    const [btnLoading, setBtnLoading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
     const editorRef = useRef(null);
     const [blogs, setBlogs] = useState({});
@@ -57,9 +58,72 @@ function EditPost() {
     const onSubmit = async (data) => {
         setLoading(true);
         const { title, slug, editorContent, file } = data;
-        // Additional logic for submitting the form and updating the post
-        console.log(data);
 
+        // Check if a new file is selected
+        if (file) {
+            try {
+                // Upload the new file to Firebase Storage
+                const storageRef = ref(storage, `images/${file.name}`);
+                const uploadTask = uploadBytesResumable(storageRef, file);
+
+                // Update the upload progress
+                uploadTask.on('state_changed', (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    setUploadProgress(progress);
+                });
+
+                // Wait for the upload to complete
+                await uploadTask;
+
+                // Get the download URL of the uploaded file
+                const downloadURL = await getDownloadURL(storageRef);
+
+                // Update the featuredImage in the blogs state
+                setBlogs((prevBlogs) => ({
+                    ...prevBlogs,
+                    featuredImage: downloadURL,
+                }));
+            } catch (error) {
+                console.error('Error uploading image: ', error.message);
+                setLoading(false);
+                return;
+            }
+        }
+
+        // Additional logic for submitting the form and updating the post
+        try {
+            const updatedPost = {
+                title,
+                slug,
+                content: editorContent,
+                featuredImage: blogs.featuredImage,
+            };
+
+            // Make an API request to update the post
+            const response = await axios.put(`${POST_API_URL}/update/${slug}`, updatedPost, {
+                headers: {
+                    Authorization: `Bearer ${user.token}`,
+                },
+            });
+
+            if (response.status === 200) {
+                toast.success('Post updated successfully');
+                setBlogs(response.data);
+                setValue('title', response.data.title);
+                setValue('slug', response.data.slug);
+                setEditorContent(response.data.content);
+                // Additional success handling if needed
+            } else {
+                toast.error('Failed to update post');
+                // Additional error handling if needed
+            }
+        } catch (error) {
+            console.error('Error updating post: ', error.message);
+            // Handle error as needed
+        }
+
+        // Reset the form and loading state
+        reset();
         setLoading(false);
     };
 
@@ -74,8 +138,8 @@ function EditPost() {
     return (
         <div className="max-w-7xl mx-auto p-10">
             {loading ? (
-                <div className="flex justify-center items-center h-screen">
-                    <ClipLoader color="#3B82F6" size={150} />
+                <div className="flex justify-center items-center h-96">
+                    <ClipLoader size={60} />
                 </div>
             ) : (
                 <form onSubmit={handleSubmit(onSubmit)}>
@@ -102,6 +166,7 @@ function EditPost() {
                                         className="form-inputs"
                                         type="text"
                                         {...register('slug', { required: 'Slug is required' })}
+                                        disabled
                                     />
                                 </div>
                             </div>
@@ -137,80 +202,66 @@ function EditPost() {
                                 <label htmlFor="file" className="text-base font-medium text-gray-900">
                                     Featured Image
                                 </label>
+
                                 <div className="mt-2">
                                     <div className="flex items-center justify-center">
                                         <div className="mx-auto w-full bg-white">
                                             <div className="mb-5">
-                                                <div className="mb-5">
-                                                    {!watchFile && (
-                                                        <input type="file" name="file" id="file" className="sr-only" onChange={handleFileChange} />
-                                                    )}
-                                                    <label
-                                                        htmlFor="file"
-                                                        className={`${watchFile ? 'cursor-not-allowed' : 'cursor-pointer'} relative flex min-h-[200px] items-center justify-center rounded-md border border-dashed border-gray-400 p-12 text-center`}
-                                                        title={`${watchFile ? 'Only one image allowed' : 'Select Featured Image  '}`}
-                                                    >
-                                                        <div>
-                                                            <span className="mb-2 block text-xl font-semibold text-[#07074D]">Drop files here</span>
-                                                            <span className="mb-2 block text-base font-medium text-[#6B7280]">Or</span>
-                                                            <span className="inline-flex rounded border border-[#e0e0e0] py-2 px-7 text-base font-medium text-[#07074D]">
-                                                                Browse
-                                                            </span>
-                                                        </div>
-                                                    </label>
-                                                </div>
+                                                {blogs.featuredImage && (
+                                                    <div className="mb-5">
+                                                        {watchFile && (
+                                                            <input type="file" name="file" id="file" className="sr-only" onChange={handleFileChange} />
+                                                        )}
+                                                        <label
+                                                            htmlFor="file"
+                                                            className={`${watchFile ? 'hidden' : 'cursor-pointer'} relative flex min-h-[200px] items-center justify-center rounded-md border border-dashed border-gray-400 p-12 text-center`}
+                                                            title='Only one image allowed'
+                                                        >
+                                                            <div>
+                                                                <span className="mb-2 block text-xl font-semibold text-[#07074D]">Drop files here</span>
+                                                                <span className="mb-2 block text-base font-medium text-[#6B7280]">Or</span>
+                                                                <span className="inline-flex rounded border border-[#e0e0e0] py-2 px-7 text-base font-medium text-[#07074D]">
+                                                                    Browse
+                                                                </span>
+                                                            </div>
+                                                        </label>
+                                                    </div>)}
 
-                                                <div className="rounded-md bg-[#F5F7FB] py-4 px-8">
-                                                    <div className="flex gap-3">
+                                                {watchFile && (
+                                                    <div className="flex gap-3 relative">
                                                         <div>
                                                             <img
-                                                                src={blogs.featuredImage}
-                                                                className="object-cover border w-20 h-20 mr-5"
+                                                                src={watchFile ? (URL.createObjectURL(watchFile)) : (blogs.featuredImage)}
+                                                                className="object-contain w-full mr-5"
                                                                 alt="Selected file"
                                                             />
                                                         </div>
-                                                        <div className="w-full">
-                                                            <div className="flex items-center justify-between">
-                                                                <button className="text-[#07074D]" onClick={() => setValue('file', null)}>
-                                                                    <X />
-                                                                </button>
-                                                            </div>
-                                                            <div className="flex justify-center items-center gap-3 mt-5">
-                                                                <div className="relative h-[6px] w-full rounded-lg bg-[#E2E5EF]">
-                                                                    <div
-                                                                        className="absolute left-0 right-0 h-full w-96 rounded-lg bg-[#6A64F1]"
-                                                                        style={{
-                                                                            width: `${uploadProgress}% `,
-                                                                        }}
-                                                                    />
-                                                                </div>
-                                                                <span>{Math.round(uploadProgress)}%</span>
-                                                            </div>
-                                                        </div>
+                                                        <button className="absolute right-3 top-3 bg-gray-700 text-white rounded-full p-2" onClick={() => setValue('file', null)}>
+                                                            <X size={18} />
+                                                        </button>
                                                     </div>
-                                                </div>
-
-                                            </div>
-                                            <div>
-                                                <button
-                                                    type="submit"
-                                                    className="hover:shadow-form w-full rounded-md bg-[#6A64F1] py-3 px-8 text-center text-base font-semibold text-white outline-none"
-                                                    disabled={loading}
-                                                >
-                                                    {
-                                                        loading ? (
-                                                            <ClipLoader color="#ffffff" loading={loading} size={20} />
-                                                        ) : (
-                                                            'Publish'
-                                                        )
-                                                    }
-                                                </button>
+                                                )}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
+                            <div>
+                                <button
+                                    type="submit"
+                                    className="hover:shadow-form w-full rounded-md bg-[#6A64F1] py-3 px-8 text-center text-base font-semibold text-white outline-none"
+                                    disabled={loading}
+                                >
+                                    {loading ? (
+                                        <ClipLoader color="#ffffff" loading={loading} size={20} />
+                                    ) : (
+                                        'Publish'
+                                    )}
+                                </button>
+                            </div>
                         </div>
+
                     </div>
                 </form>
             )}

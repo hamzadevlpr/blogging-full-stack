@@ -1,4 +1,5 @@
 import React from 'react'
+import hero from '../../assets/hero.webp'
 
 function Hero() {
     return (
@@ -26,7 +27,7 @@ function Hero() {
                         </div>
                     </div>
                     <div className="-mx-16 max-w-4xl pt-12 md:mx-0 md:w-1/2 lg:pt-24">
-                        <img alt="hero" className="mx-auto sm:w-full w-[26rem]" src="https://www.tailwindcollections.com/img/hero.webp" />
+                        <img alt="hero" className="mx-auto sm:w-full w-[26rem]" src={hero} />
                     </div>
                 </div>
             </div>

@@ -85,6 +85,47 @@ router.post('/add', async (req, res) => {
 });
 
 
+// update post by slug
+router.put('/update/:slug', async (req, res) => {
+    try {
+        const { title, slug, content, featuredImage } = req.body;
+        const user_id = req.user._id;
+        const { slug: oldSlug } = req.params;
+
+        // Check if the post with the old slug exists
+        const existingPost = await Post.findOne({ slug: oldSlug });
+
+        if (!existingPost) {
+            return res.status(404).json({ error: 'Post not found.' });
+        }
+
+        // If the slug is being updated, check if the new slug already exists
+        if (slug !== oldSlug) {
+            const postWithNewSlug = await Post.findOne({ slug });
+
+            if (postWithNewSlug) {
+                return res.status(400).json({ error: 'A post with the same slug already exists.' });
+            }
+        }
+
+        // Update the post
+        existingPost.title = title;
+        existingPost.slug = slug;
+        existingPost.content = content;
+        existingPost.featuredImage = featuredImage;
+        existingPost.user_id = user_id;
+
+        // Save the updated post to the database
+        const updatedPost = await existingPost.save();
+
+        res.status(200).json({ message: 'Post Updated Successfully!' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error.' });
+    }
+});
+
+
 router.get('/:slug', async (req, res) => {
     const slug = req.params.slug;
 
